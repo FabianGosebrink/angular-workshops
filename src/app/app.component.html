@@ -51,11 +51,12 @@
         <h1 class="h2">{{ topic.heading }}</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">
-              Share
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">
-              Export
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="toIntroduction()"
+            >
+              Introduction
             </button>
           </div>
           <button
@@ -68,7 +69,7 @@
         </div>
       </div>
 
-      <div *ngIf="topic">
+      <div *ngIf="topic" class="markdown">
         <div *ngIf="currentIndex < 0">
           <markdown [data]="topic.introduction"></markdown>
           <hr />
@@ -83,7 +84,16 @@
             class="btn btn-primary"
             type="button"
             (click)="previousLab()"
-            [disabled]="currentIndex <= 0"
+            *ngIf="currentIndex === 0"
+          >
+            Introduction
+          </button>
+
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="previousLab()"
+            *ngIf="currentIndex > 0"
           >
             Previous
           </button>

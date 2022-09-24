@@ -47,6 +47,11 @@ export class AppComponent {
     this.updateIndexInRoute(this.currentIndex);
   }
 
+  toIntroduction() {
+    this.currentIndex = -1;
+    this.updateIndexInRoute(this.currentIndex);
+  }
+
   private updateIndexInRoute(currentIndex: number) {
     this.router
       .navigate(['/'], {

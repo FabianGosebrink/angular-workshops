@@ -5,12 +5,23 @@ import { LAB_IDENTIFIER } from './contants';
   providedIn: 'root',
 })
 export class MarkdownHeaderService {
-  getFirstMainHeading(text: string) {
-    const allHeadings = this.getHeadings(text);
-    return allHeadings.find((h) => h.level === 1)?.text || '';
+  getFirstMainHeading(text: string): Heading {
+    const allHeadings = this.getAllheadings(text);
+    return allHeadings.find((h) => h.level === 1);
   }
 
-  getHeadings(text: string): Heading[] {
+  getIntroHeadings(text: string): Heading[] {
+    const allHeadings = this.getAllheadings(text);
+
+    return allHeadings.filter((x) => !x.rawText.startsWith(LAB_IDENTIFIER));
+  }
+
+  getLabHeadings(text: string): Heading[] {
+    const allHeadings = this.getAllheadings(text);
+    return allHeadings.filter((x) => x.rawText.startsWith(LAB_IDENTIFIER));
+  }
+
+  private getAllheadings(text: string): Heading[] {
     const regXHeader = /(#{1,6} .*)\r?\n/g;
     const headings = text.match(regXHeader);
 
@@ -23,10 +34,7 @@ export class MarkdownHeaderService {
 
   private extractHeading(text: string): Heading {
     const level = (text.match(/\#/g) || []).length;
-    const headingText = text
-      .replace(LAB_IDENTIFIER, '')
-      .replace(/\#/g, '')
-      .trim();
+    const headingText = text.replace(/\#/g, '').trim();
 
     return {
       level,

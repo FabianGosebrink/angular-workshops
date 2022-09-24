@@ -13,7 +13,7 @@ export class AppComponent {
 
   topic: Topic | null = null;
 
-  currentIndex = -1;
+  currentIndex = 0;
 
   constructor(
     private markdownParserService: MarkdownParserService,
@@ -34,6 +34,7 @@ export class AppComponent {
       .subscribe(({ labIndex, data }) => {
         this.topic = data;
         this.currentIndex = labIndex;
+        this.updateIndexInRoute(this.currentIndex);
       });
   }
 
@@ -44,11 +45,6 @@ export class AppComponent {
 
   previousLab() {
     this.currentIndex--;
-    this.updateIndexInRoute(this.currentIndex);
-  }
-
-  toIntroduction() {
-    this.currentIndex = -1;
     this.updateIndexInRoute(this.currentIndex);
   }
 

@@ -38,7 +38,7 @@
               [routerLinkActive]="'active'"
             >
               <span data-feather="home" class="align-text-bottom"></span>
-              {{ codelab.heading.text }}
+              {{ codelab.heading?.text }}
             </a>
           </li>
         </ul>
@@ -51,11 +51,7 @@
         <h1 class="h2">{{ topic.heading }}</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-secondary"
-              (click)="toIntroduction()"
-            >
+            <button type="button" class="btn btn-sm btn-outline-secondary">
               Introduction
             </button>
           </div>
@@ -70,11 +66,7 @@
       </div>
 
       <div *ngIf="topic" class="markdown">
-        <div *ngIf="currentIndex < 0">
-          <markdown [data]="topic.introduction"></markdown>
-          <hr />
-        </div>
-        <div *ngIf="currentIndex >= 0">
+        <div>
           <markdown [data]="topic.codelabs[currentIndex].text"></markdown>
           <hr />
         </div>

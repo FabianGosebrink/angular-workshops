@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { MarkdownHeaderService, Heading } from './markdown-header.service';
 import { LAB_IDENTIFIER } from './contants';
+import { Heading, MarkdownHeaderService } from './markdown-header.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,26 +33,29 @@ export class MarkdownParserService {
   private extractIntroduction(text: string): Codelab {
     const untilFirstLab = text.indexOf(LAB_IDENTIFIER);
     const introductionText = text.substring(0, untilFirstLab);
-    const heading = this.markdownHeaderService.getFirstMainHeading(text);
+    const textWithoutFirstLine = introductionText.split('\r\n\r\n').slice(2);
+    const introText = textWithoutFirstLine.join('\r\n\r\n');
 
     return {
-      heading,
-      text: introductionText,
+      heading: {
+        level: 1,
+        text: 'Introduction',
+        rawText: '## Introduction',
+      },
+      text: introText,
       index: 0,
     };
   }
 
   private extractCodeLabs(text: string): Codelab[] {
-    const codeLabs = text.split(LAB_IDENTIFIER);
-
+    const startOfFirstLab = text.indexOf(LAB_IDENTIFIER);
+    const codelabText = text.substring(startOfFirstLab, text.length - 1);
+    const codeLabs = codelabText.split(LAB_IDENTIFIER).filter((x) => !!x);
     const allSubHeadings = this.markdownHeaderService.getLabHeadings(text);
-    const allFilteresLabHeadings = allSubHeadings.filter(
-      (h) => h.level > 1 && h.rawText.startsWith(LAB_IDENTIFIER)
-    );
 
     return codeLabs.map((text, index) => {
       const completeText = LAB_IDENTIFIER + ' ' + text.trim();
-      const currentHeading = allFilteresLabHeadings[index];
+      const currentHeading = allSubHeadings[index];
 
       return {
         heading: currentHeading,

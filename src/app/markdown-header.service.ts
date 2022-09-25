@@ -6,22 +6,22 @@ import { LAB_IDENTIFIER } from './contants';
 })
 export class MarkdownHeaderService {
   getFirstMainHeading(text: string): Heading {
-    const allHeadings = this.getAllheadings(text);
+    const allHeadings = this.getAllHeadings(text);
     return allHeadings.find((h) => h.level === 1);
   }
 
   getIntroHeadings(text: string): Heading[] {
-    const allHeadings = this.getAllheadings(text);
+    const allHeadings = this.getAllHeadings(text);
 
     return allHeadings.filter((x) => !x.rawText.startsWith(LAB_IDENTIFIER));
   }
 
   getLabHeadings(text: string): Heading[] {
-    const allHeadings = this.getAllheadings(text);
+    const allHeadings = this.getAllHeadings(text);
     return allHeadings.filter((x) => x.rawText.startsWith(LAB_IDENTIFIER));
   }
 
-  private getAllheadings(text: string): Heading[] {
+  private getAllHeadings(text: string): Heading[] {
     const regXHeader = /(#{1,6} .*)\r?\n/g;
     const headings = text.match(regXHeader);
 

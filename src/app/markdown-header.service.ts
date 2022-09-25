@@ -18,7 +18,10 @@ export class MarkdownHeaderService {
 
   getLabHeadings(text: string): Heading[] {
     const allHeadings = this.getAllHeadings(text);
-    return allHeadings.filter((x) => x.rawText.startsWith(LAB_IDENTIFIER));
+
+    return allHeadings
+      .filter((x) => x.rawText.startsWith(LAB_IDENTIFIER))
+      .map((x) => ({ ...x, text: x.text.replace('Lab:', '').trim() }));
   }
 
   private getAllHeadings(text: string): Heading[] {

@@ -67,7 +67,7 @@
 
       <div *ngIf="topic" class="markdown">
         <div>
-          <markdown [data]="topic.codelabs[currentIndex].text"></markdown>
+          <markdown [data]="topic.codelabs[currentIndex]?.text"></markdown>
           <hr />
         </div>
 
@@ -76,20 +76,16 @@
             class="btn btn-primary"
             type="button"
             (click)="previousLab()"
-            *ngIf="currentIndex === 0"
-          >
-            Introduction
-          </button>
-
-          <button
-            class="btn btn-primary"
-            type="button"
-            (click)="previousLab()"
-            *ngIf="currentIndex > 0"
+            [disabled]="currentIndex <= 0"
           >
             Previous
           </button>
-          <button class="btn btn-primary" type="button" (click)="nextLab()">
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="nextLab()"
+            [disabled]="currentIndex === topic.codelabs.length - 1"
+          >
             Next
           </button>
         </div>

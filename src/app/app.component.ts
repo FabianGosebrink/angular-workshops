@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { map, concatMap } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { MarkdownParserService, Topic } from './markdown-parser.service';
 
 @Component({
@@ -22,25 +22,28 @@ export class AppComponent {
   ) {}
 
   ngOnInit() {
+    this.markdownParserService
+      .parseMarkdown('assets/start.md')
+      .subscribe((data) => (this.topic = data));
+
     this.route.queryParamMap
       .pipe(
         map((params: ParamMap) => Number(params.get('lab')) || 0),
-        concatMap((labIndex) => {
-          return this.markdownParserService
-            .parseMarkdown('assets/start.md')
-            .pipe(map((data) => ({ labIndex, data })));
-        })
+        tap(console.log)
       )
-      .subscribe(({ labIndex, data }) => {
-        this.topic = data;
-        this.currentIndex = labIndex;
-        this.updateIndexInRoute(this.currentIndex);
+      .subscribe((labIndex) => {
+        this.currentIndex = labIndex || 0;
+        this.updateIndexInRoute(labIndex);
       });
   }
 
   nextLab() {
-    this.currentIndex++;
-    this.updateIndexInRoute(this.currentIndex);
+    const nextIndex = this.currentIndex + 1;
+
+    if (nextIndex <= this.topic.codelabs.length - 1) {
+      this.currentIndex = nextIndex;
+      this.updateIndexInRoute(this.currentIndex);
+    }
   }
 
   previousLab() {
@@ -49,12 +52,11 @@ export class AppComponent {
   }
 
   private updateIndexInRoute(currentIndex: number) {
-    this.router
-      .navigate(['/'], {
-        queryParams: { lab: currentIndex },
-      })
-      .then(() => {
-        this.router.onSameUrlNavigation = 'ignore';
-      });
+    this.router.navigate(['/'], {
+      queryParams: { lab: currentIndex },
+    });
+    // .then(() => {
+    //   this.router.onSameUrlNavigation = 'ignore';
+    // });
   }
 }
